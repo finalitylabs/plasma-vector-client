@@ -3,13 +3,18 @@ const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 const request = new XMLHttpRequest()
 const bigInt = require("big-integer")
 const utils = require('web3-utils')
+const abi = require('./abi.js')
+const operatorAddress = '0x8b9ffe438a877797385f1994270ec0d4e8cabc55'
 //const PlasmaVector = require('plasma-vector')
 
 class VectorClient {
-  constructor(g, N, serverAddress, pk, sk) {
+  constructor(web3, g, N, serverAddress, pk, sk) {
+    let p = window.web3.eth.contract(abi)
     //this.pv = new PlasmaVector(g, N)
     // this.g = bigInt(g) // CRS
     // this.N = bigInt(N) // CRS
+    this.operator = p.at(operatorAddress)
+    this.web3 = web3
     this.A = this.g
     this.local_ids = []
     this.pk = pk
@@ -18,22 +23,19 @@ class VectorClient {
 
   getBalance(user) {
     return new Promise(function(resolve,reject) {
-      console.log(user)
       request.open('POST', 'http://localhost:8546/getAccountBalance', true)
       request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
       request.send(JSON.stringify({user: user}))
       request.onreadystatechange = function() {
         if (request.readyState == 4) {
-            //alert(request.responseText);
-            //return request.responseText
-            resolve(request.responseText)
+          resolve(request.responseText)
         }
       }
     })
   }
 
-  deposit(amt) {
-
+  async deposit(amt, sender) {
+    return this.operator.deposit({value:utils.toWei(amt)})
   }
 
   withdraw(ids) {
