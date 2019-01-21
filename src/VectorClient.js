@@ -17,9 +17,19 @@ class VectorClient {
   }
 
   getBalance(user) {
-    request.open('POST', 'http://localhost:8546/getAccountBalance', true)
-    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-    request.send(JSON.stringify({user: user}))
+    return new Promise(function(resolve,reject) {
+      console.log(user)
+      request.open('POST', 'http://localhost:8546/getAccountBalance', true)
+      request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+      request.send(JSON.stringify({user: user}))
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+            //alert(request.responseText);
+            //return request.responseText
+            resolve(request.responseText)
+        }
+      }
+    })
   }
 
   deposit(amt) {

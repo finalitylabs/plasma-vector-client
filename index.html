@@ -2,12 +2,10 @@
   <head>
     <title>Test Operator Api</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="./src/VectorClient.js"></script>
     <script>
       $(document).ready(function(){
         var user,pass, v;
         var request = new XMLHttpRequest()
-        var client = new VectorClient()
         request.onreadystatechange = function() {
           if (request.readyState == XMLHttpRequest.DONE) {
               alert(request.responseText);
@@ -15,7 +13,9 @@
         }
         $("#submit").click(function(){
           user=$("#user").val();
-          client.getBalance(user)
+          request.open('POST', 'http://localhost:8546/getAccountBalance', true)
+          request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+          request.send(JSON.stringify({user: user}))
         });
 
         $("#submitIds").click(function(){
