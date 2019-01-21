@@ -1,5 +1,6 @@
 'use strict'
-
+const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
+const request = new XMLHttpRequest()
 const bigInt = require("big-integer")
 const utils = require('web3-utils')
 //const PlasmaVector = require('plasma-vector')
@@ -13,6 +14,20 @@ class VectorClient {
     this.local_ids = []
     this.pk = pk
     this.sk = sk // todo decrypt with pass
+  }
+
+  getBalance(user) {
+    request.open('POST', 'http://localhost:8546/getAccountBalance', true)
+    request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    request.send(JSON.stringify({user: user}))
+  }
+
+  deposit(amt) {
+
+  }
+
+  withdraw(ids) {
+
   }
 
   sendCoins(coinIDs, destination) {

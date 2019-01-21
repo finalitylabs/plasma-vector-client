@@ -2,10 +2,12 @@
   <head>
     <title>Test Operator Api</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="./src/VectorClient.js"></script>
     <script>
       $(document).ready(function(){
-        var user,pass;
+        var user,pass, v;
         var request = new XMLHttpRequest()
+        var client = new VectorClient()
         request.onreadystatechange = function() {
           if (request.readyState == XMLHttpRequest.DONE) {
               alert(request.responseText);
@@ -13,15 +15,14 @@
         }
         $("#submit").click(function(){
           user=$("#user").val();
-          request.open('POST', 'http://localhost:8546/getAccountBalance', true)
+          client.getBalance(user)
+        });
+
+        $("#submitIds").click(function(){
+          v=$("#ids").val();
+          request.open('POST', 'http://localhost:8546/getInclusionProof', true)
           request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
-          request.send(JSON.stringify({user: user}))
-          // $.post("http://localhost:8546/getAccountBalance",{user: user}, function(data){
-          //   if(data==='done')
-          //     {
-          //       alert("login success");
-          //     }
-          // });
+          request.send(JSON.stringify({value: v}))
         });
       });
     </script>
@@ -30,5 +31,9 @@
     <h1>Query Account</h1>
     <input type="TEXT" id="user" size="40"><br>
     <input type="button" id="submit" value="Submit">
+    <br/>
+    <h1>Get inclusion proof</h1>
+    <input type="TEXT" id="ids" size="40"><br>
+    <input type="button" id="submitIds" value="Submit">
   </body>
 </html>
