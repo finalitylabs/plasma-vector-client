@@ -35,7 +35,12 @@ class VectorClient {
   }
 
   async deposit(amt, sender) {
-    return this.operator.deposit({value:utils.toWei(amt)})
+    return new Promise ((resolve, reject) => {
+      this.operator.deposit({value:utils.toWei(amt)}, (err, res) => {
+        if (err) reject(err);
+        resolve(res);
+      })
+    })
   }
 
   withdraw(ids) {
