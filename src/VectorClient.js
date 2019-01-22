@@ -43,6 +43,10 @@ class VectorClient {
     })
   }
 
+  getIDs() {
+
+  }
+  
   withdraw(ids) {
 
   }
@@ -60,7 +64,7 @@ class VectorClient {
     return this.A
   }
 
-  getInclusionWitness(coinIDs){
+  securityCheck(coinIDs){
     // TODO: ping server
   }
 
