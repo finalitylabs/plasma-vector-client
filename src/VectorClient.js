@@ -46,7 +46,7 @@ class VectorClient {
   getIDs() {
 
   }
-  
+
   withdraw(ids) {
 
   }
@@ -62,6 +62,19 @@ class VectorClient {
   getAccumulator() {
     // call contract to get latest A
     return this.A
+  }
+
+  checkDeposit(address) {
+    return new Promise(function(resolve,reject) {
+      request.open('POST', 'http://localhost:8546/checkDeposit', true)
+      request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+      request.send(JSON.stringify({address: address}))
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+          resolve(request.responseText)
+        }
+      }
+    })
   }
 
   securityCheck(coinIDs){
