@@ -1,6 +1,7 @@
 'use strict'
 const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 const request = new XMLHttpRequest()
+const fetch = require('node-fetch')
 const bigInt = require("big-integer")
 const utils = require('web3-utils')
 const abi = require('./abi.js')
@@ -34,13 +35,56 @@ class VectorClient {
     })
   }
 
-  async deposit(amt, sender) {
-    return new Promise ((resolve, reject) => {
-      this.operator.deposit({value:utils.toWei(amt)}, (err, res) => {
-        if (err) reject(err);
-        resolve(res);
+  transfer(ins, receiver, sender, start, end) {
+    // todo, get coin index from storage
+    return new Promise(function(resolve, reject) {
+      const body = {ins:[ins,0], v:[1,1], to: receiver, from: sender, start: start, end:end}
+      fetch('http://localhost:8546/transfer', {
+        method: 'post',
+        body:    JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        resolve(json)
       })
     })
+  }
+
+  deposit(amt, sender) {
+    self=this
+    return new Promise(async function(resolve, reject) {
+      self.operator.deposit({value:utils.toWei(amt)}, (err, res) => {
+        const body = { txhash: res };
+        fetch('http://localhost:8546/deposit', {
+          method: 'post',
+          body:    JSON.stringify(body),
+          headers: { 'Content-Type': 'application/json' },
+        })
+        .then(res => res.json())
+        .then(json => {
+          console.log(json)
+          resolve(json)
+        })
+      })
+    })
+  }
+
+  getReceived(user) {
+    return new Promise(function(resolve, reject) {
+      const body = { user: user };
+      fetch('http://localhost:8546/received', {
+        method: 'post',
+        body:    JSON.stringify(body),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      .then(res => res.json())
+      .then(json => {
+        console.log(json)
+        resolve(json)
+      })
+    })    
   }
 
   getIDs() {
