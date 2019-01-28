@@ -5,7 +5,7 @@ const fetch = require('node-fetch')
 const bigInt = require("big-integer")
 const utils = require('web3-utils')
 const abi = require('./abi.js')
-const operatorAddress = '0x8b9ffe438a877797385f1994270ec0d4e8cabc55'
+const operatorAddress = '0xbe6d157643d2968077464b8602ff8447fdd9edb0'
 //const PlasmaVector = require('plasma-vector')
 
 class VectorClient {
@@ -56,7 +56,8 @@ class VectorClient {
     self=this
     return new Promise(async function(resolve, reject) {
       self.operator.deposit({value:utils.toWei(amt)}, (err, res) => {
-        const body = { txhash: res };
+        const body = { txhash: res }
+        console.log('Deposit server ping')
         fetch('http://localhost:8546/deposit', {
           method: 'post',
           body:    JSON.stringify(body),
@@ -81,7 +82,6 @@ class VectorClient {
       })
       .then(res => res.json())
       .then(json => {
-        console.log(json)
         resolve(json)
       })
     })    
