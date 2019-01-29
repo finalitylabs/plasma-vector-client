@@ -35,10 +35,17 @@ class VectorClient {
     })
   }
 
-  transfer(ins, receiver, sender, start, end) {
+  transfer(amt, ins, receiver, sender, indexes) {
     // todo, get coin index from storage
     return new Promise(function(resolve, reject) {
-      const body = {ins:[ins,0], v:[1,1], to: receiver, from: sender, start: start, end:end}
+      // todo: expand ins to and array of inputs for multiple tx, and multi tx per block
+      let inputs = []
+      for(var i=0; i<ins.length; i++) {
+        inputs.push([ins[i],0])
+      }
+      
+      const body = {ins:inputs, to: receiver, from: sender, indexes:indexes, amt:amt}
+      console.log(body)
       fetch('http://localhost:8546/transfer', {
         method: 'post',
         body:    JSON.stringify(body),
@@ -46,7 +53,6 @@ class VectorClient {
       })
       .then(res => res.json())
       .then(json => {
-        console.log(json)
         resolve(json)
       })
     })
@@ -82,6 +88,8 @@ class VectorClient {
       })
       .then(res => res.json())
       .then(json => {
+        // console.log('######')
+        // console.log(json)
         resolve(json)
       })
     })    
