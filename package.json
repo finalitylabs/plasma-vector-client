@@ -1,6 +1,6 @@
 {
   "name": "vector-client",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Client codebase for vector plasma",
   "main": "/src/VectorClient.js",
   "dependencies": {
