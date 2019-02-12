@@ -8,6 +8,8 @@ const abi = require('./abi.js')
 const operatorAddress = '0xbe6d157643d2968077464b8602ff8447fdd9edb0'
 //const PlasmaVector = require('plasma-vector')
 
+let server_address = 'http://18.188.146.93:8546/'
+
 class VectorClient {
   constructor(web3, g, N, serverAddress, pk, sk) {
     let p = window.web3.eth.contract(abi)
@@ -24,7 +26,7 @@ class VectorClient {
 
   getBalance(user) {
     return new Promise(function(resolve,reject) {
-      request.open('POST', 'http://localhost:8546/getAccountBalance', true)
+      request.open('POST', server_address+'getAccountBalance', true)
       request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
       request.send(JSON.stringify({user: user}))
       request.onreadystatechange = function() {
@@ -46,7 +48,7 @@ class VectorClient {
       
       const body = {ins:inputs, to: receiver, from: sender, indexes:indexes, amt:amt}
       console.log(body)
-      fetch('http://localhost:8546/transfer', {
+      fetch(server_address+'transfer', {
         method: 'post',
         body:    JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
@@ -64,7 +66,7 @@ class VectorClient {
       self.operator.deposit({value:utils.toWei(amt)}, (err, res) => {
         const body = { txhash: res }
         console.log('Deposit server ping')
-        fetch('http://localhost:8546/deposit', {
+        fetch(server_address+'deposit', {
           method: 'post',
           body:    JSON.stringify(body),
           headers: { 'Content-Type': 'application/json' },
@@ -81,7 +83,7 @@ class VectorClient {
   getReceived(user) {
     return new Promise(function(resolve, reject) {
       const body = { user: user };
-      fetch('http://localhost:8546/received', {
+      fetch(server_address+'received', {
         method: 'post',
         body:    JSON.stringify(body),
         headers: { 'Content-Type': 'application/json' },
@@ -118,7 +120,7 @@ class VectorClient {
 
   checkDeposit(address) {
     return new Promise(function(resolve,reject) {
-      request.open('POST', 'http://localhost:8546/checkDeposit', true)
+      request.open('POST', server_address+'checkDeposit', true)
       request.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
       request.send(JSON.stringify({address: address}))
       request.onreadystatechange = function() {
